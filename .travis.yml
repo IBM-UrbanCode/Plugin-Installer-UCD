@@ -1,0 +1,31 @@
+language: groovy
+rvm:
+- 1.8.8
+install:
+- ant install-ivy -DfailIvy=false
+before_script:
+- export BUILD_LIFE=${TRAVIS_COMMIT:0:7}
+- ant run-tests
+script:
+- ant -DbuildLife=${BUILD_LIFE}
+jdk:
+- oraclejdk8
+- oraclejdk7
+- openjdk7
+- openjdk6
+notifications:
+  slack:
+    secure: pmiEC8cvylO5GpOnLt+sqIVNjZ7lc67ZhuiRS4yTPFg4LnZ8IsaGWSCuSu+oTD+/Yy3pYlwhnEIyvPCrNkClCw443tCjTx0WqfON3G+eNdKm5yAKC7BCwWvUtmQ9HDd0fq+PaTjmZC7Z4XthyuLuPfUoxAThac+kwnrOtgBRzSlc6M4aHvn4s9ldS5rZLkQZ4djaFji0OlQX5P4SPgBvWUj3XACuUmSJP1bhUEFEbP4G5XteXgMaUeH9HTyO9FiSapstVEf/Uz+228xrweQBv4BeExx2ONnFJVVdKn6bluQ28iJPO2rz4sg3ZlKKVuBJZV9pp2AVaVEWx+8tYkBM/S1LZ+e9rQrImBLeSaUdWRUnQZxP7AY9zhEYx8Pu1YPYSnyzAwFxuoxptbSnyLf9nkK9urWAn1/xxNwHfgsvwZsNKlxDK9gIV29k3siOpLuUtmavr/lv3HydwgowOk7bK6tdlorMVmhhiZ1dYop724lhOc4XlSXt1zFn8V3QOc0OKTCgpUi/7ANv+s8B68thZr0nU7sNNN3zKK3cp/rxwkKtDJE1HCSiCFKBpzxlw2vQnQPbhZO0Ekyl8+3SC4yLhuReMkCrBcBn29M/xIGp9Lhhu8BYwyouo8WJw1jQNfuHq6BSydh/g2eK9bWu0f8GVim5P4u7dpHoH8kSuG8pnY0=
+    on_success: change
+    on_failure: change
+  email: false
+deploy:
+  provider: releases
+  api_key:
+    secure: X4h/9K9XCHjZ/WdPatU+txTLGIXNynSizvWIOah9wavU/gSvxnuiiYcptAJKIIsZhYsMOGB3B5Q8o19sNjmtDWzwFAdVLOVdj7W/vPU1jitksqYxH5QEfO5FsLiAyTxJrQKZinguF9BK2jevViXJU144p3xL5TtPBaZep5niZ8Wh0uipksr4ZhxmTxXndoh2PTNIcdmjR8bSZTi2FzU7oxh5mp5mAEbTd5AtPt731SztzMG4CVttlkoxaXscmKac1YPE8iD3RD7GdFE67Y+0Zpe5GBY492UfID+xf1MYAMOzqIZ0jO9XGJTDtr8hygKhJVUKWthgXnIY6GjPX0sKSXJdbW1Xu22Kd8YTmwBlHkaO/SYs1xH0XYXyOp0a8UHufdpECGUjrBQWBBbPC+GqS/B7bbNIJKcJVV4zlr90w4MKHFd3EN7f/ykLzhe8oxS7yepAOCbeku99o36FEPBEGednxhMlto0pPhNvUa60fo/z8gH5Vds6f7nHP8WoHO0x74CFnkFYGC4Ip7vDUJytiZcwGMO3MeX5fV5VcM+ONoZDdf3rwQzaA+Jo/P0hgbkbMoqbUIVzJIgdja1G3JSCargct4HBcQ3malcz14B0yy2g/4c1S3YTrRyH4+JqjgkBCKMVowum9mW1Y17jFCp45HlR4u8MgXBTv9WkdBIUgnQ=
+  file_glob: true
+  file: releases/*.zip
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: IBM-UrbanCode/Informatica-UCD
