@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    © Copyright IBM Corporation 2017.
+    This is licensed under the following license.
+    The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
+    U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+
+<plugin xmlns="http://www.urbancode.com/PluginXMLSchema_v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <header>
+    <identifier id="com.urbancode.air.plugin.plugin-installer" name="Plugin Installer" version="1"/>
+    <description>
+      This plug-in includes steps to automate the installation of IBM UrbanCode Deploy plugins.
+      </description>
+    <tag>Toolkit/Plugin Installer</tag>
+  </header>
+  <step-type name="Install Plugin">
+    <description>Install an Automation or Source Configuration plugin into IBM UrbanCode Deploy</description>
+    <properties>
+            <property name="ucdServer" required="true">
+                <property-ui type="textBox" label="UCD Sever" description="Complete URL to the IBM UrbanCode Deploy server where the plugin will be installed. Example: https://localhost:8443"/>
+            </property>
+            <property name="username" required="true">
+                <property-ui type="textBox" label="Username" description="UrbanCode Deploy username with plugin installation privileges."/>
+            </property>
+            <property name="password" required="true">
+                <property-ui type="secureBox" label="Password" description="UrbanCode Deploy password."/>
+            </property>
+            <property name="pluginStr" required="true">
+                <property-ui type="textBox" label="Plugin Path" description="Path to plugin you wish to install."/>
+            </property>
+            <property name="autoOrSC">
+                <property-ui type="selectBox" default-value="Automation" label="Type" description="Select whether the plugin is an automation or source configuration plugin."/>
+                    <value label='Automation'>Automation</value>
+                    <value label='Source Configuration'>Source</value>
+            </property>
+            <property name="acceptAllCerts">
+                <property-ui type="checkBox" label="Accept All Certificates" description="Select to accept all SSL Certificates."/>
+            </property>
+        </properties>
+    <post-processing><![CDATA[
+    if (properties.get("exitCode") != 0) {
+            properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
+        }
+        else {
+            properties.put("Status", "Success");
+        }
+     ]]></post-processing>
+    <command program="${GROOVY_HOME}/bin/groovy">
+      <arg value="-cp"/>
+      <arg path="classes:lib/groovy-plugin-utils-1.2.jar:lib/httpclient-4.3.6.jar:lib/httpcore-4.3.2.jar:lib/httpmime-4.3.6.jar:lib/HttpComponents-Util.jar:lib/CommonsUtil.jar:lib/log4j-1.2.16.jar:lib/commons-codec-1.10.jar"/>
+      <arg file="install_plugin.groovy"/>
+      <arg file="${PLUGIN_INPUT_PROPS}"/>
+      <arg file="${PLUGIN_OUTPUT_PROPS}"/>
+    </command>
+  </step-type>
+</plugin>
